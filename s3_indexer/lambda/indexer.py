@@ -21,7 +21,7 @@ def add_ddb_record(table_name, key, metadata):
         )
 
     except botocore.exceptions.ClientError as e:
-            raise
+        raise
 
 
 def del_ddb_record(table_name, key):
@@ -37,7 +37,7 @@ def del_ddb_record(table_name, key):
         )
 
     except botocore.exceptions.ClientError as e:
-            raise
+        raise
 
 
 def read_s3_metadata(s3_bucket, s3_key):
