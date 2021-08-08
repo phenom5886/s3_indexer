@@ -1,51 +1,49 @@
 
-# Welcome to your CDK Python project!
+# S3 DynamoDB Index!
+## Overview
+A CDK project that deploys an integrated serverless infrastructure to maintain an index 
+of S3 objects in DynamoDB. The purpose of this is to allow for real-time reporting & monitoring 
+of assets stored in the S3 bucket.
 
-This is a blank project for Python development with CDK.
+Infrastructure deployed:
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- An S3 bucket
+- A DynamoDB Table
+- Lambda Function
+- Necessary IAM permissions
+- Event integrations 
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
+## DynamoDB Table Structure
+The DynamoDB table is simple in the initial state. 
 
-To manually create a virtualenv on MacOS and Linux:
+Sort Key: s3_key (S)
 
-```
-$ python3 -m venv .venv
-```
+Additional fields stored:
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+- content_type: Object MIME type
+- e_tag: Object MD5 hash
+- size: Object size (Bytes)
 
-```
-$ source .venv/bin/activate
-```
+Additional secondary indexes can be created to allow better searching on additional fields.
 
-If you are a Windows platform, you would activate the virtualenv like this:
+## Configuration
+You can set the following input parameters in the config.yml file:
 
-```
-% .venv\Scripts\activate.bat
-```
+- S3 bucket name
+- DynamoDB table name
+- DynamoDB read/write capacity
+- Reserved concurrency for Lambda function
 
-Once the virtualenv is activated, you can install the required dependencies.
+## Setup & Deployment
+First install all requirements:
 
 ```
 $ pip install -r requirements.txt
 ```
-
-At this point you can now synthesize the CloudFormation template for this code.
-
+Then you can deploy:
 ```
-$ cdk synth
+$ cdk deploy 
 ```
-
-To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
 
 ## Useful commands
 
