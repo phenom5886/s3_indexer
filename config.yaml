@@ -1,0 +1,5 @@
+s3_bucket_name: "ammorto-s3-index-testing"
+dynamodb_table_name: "ammorto-s3-index"
+read_capacity: 5
+write_capacity: 5
+provisioned_concurrency: 5
