@@ -1,5 +1,5 @@
 
-# S3 DynamoDB Index!
+# S3 DynamoDB Indexer
 ## Overview
 A CDK project that deploys an integrated serverless infrastructure to maintain an index 
 of S3 objects in DynamoDB. The purpose of this is to allow for real-time reporting & monitoring 
