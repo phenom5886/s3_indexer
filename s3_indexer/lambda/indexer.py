@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import boto3
+import botocore
 import os
 import urllib
-from botocore.exceptions import ClientError
 
 
 def add_ddb_record(table_name, key, metadata):
@@ -16,7 +16,8 @@ def add_ddb_record(table_name, key, metadata):
                 's3_key': key,
                 'content_type': metadata[0],
                 'e_tag': metadata[1],
-                'size': metadata[2]
+                'size': metadata[2],
+                'created_at': metadata[3].strftime("%Y-%m-%d %H:%M:%SZ")
             }
         )
 
@@ -48,8 +49,9 @@ def read_s3_metadata(s3_bucket, s3_key):
     type = object.content_type
     etag = object.e_tag
     size = object.content_length
+    creation_date = object.last_modified
 
-    return type, etag[1:-1], size
+    return type, etag[1:-1], size, creation_date
 
 
 def handler(event, context):

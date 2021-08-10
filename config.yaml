@@ -1,5 +1,11 @@
-s3_bucket_name: "random-named-s3-index-testing"
-dynamodb_table_name: "random-named-s3-index"
-read_capacity: 5
-write_capacity: 5
-provisioned_concurrency: 5
+s3:
+  bucket_name: unique-bucket-name-here
+
+dynamodb:
+  table_name: unique-bucket-name-here-s3-index
+  billing_mode: PROVISIONED
+  read_capacity: 5
+  write_capacity: 5
+
+lambda:
+  reserved_concurrency: 10

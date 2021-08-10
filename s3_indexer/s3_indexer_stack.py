@@ -12,7 +12,8 @@ from aws_cdk.aws_lambda_event_sources import S3EventSource
 
 class S3IndexerStack(cdk.Stack):
 
-    def __init__(self, scope: cdk.Construct, construct_id: str, s3_bucket: str, ddb_table_name: str, **kwargs) -> None:
+    def __init__(self, scope: cdk.Construct, construct_id: str, s3_bucket, ddb_table_name, ddb_billing_mode,
+                 lambda_concurrency, ddb_read_capacity, ddb_write_capacity, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         # Create the S3 bucket for which we will be storing object information in DDB
@@ -27,7 +28,19 @@ class S3IndexerStack(cdk.Stack):
             self,
             ddb_table_name,
             table_name=ddb_table_name,
-            partition_key={'name': 's3_key', 'type': ddb.AttributeType.STRING}
+            billing_mode=ddb.BillingMode(ddb_billing_mode),
+            partition_key={'name': 's3_key', 'type': ddb.AttributeType.STRING},
+            read_capacity=ddb_read_capacity,
+            write_capacity=ddb_write_capacity
+        )
+
+        # Add GSI's for query patterns
+        # Content Type
+        self._ddb_table.add_global_secondary_index(
+            read_capacity=ddb_read_capacity,
+            write_capacity=ddb_write_capacity,
+            index_name=f"{ddb_table_name}-content-type-index",
+            partition_key=ddb.Attribute(name="content_type", type=ddb.AttributeType.STRING)
         )
 
         # Create the indexing Lambda function
@@ -38,6 +51,7 @@ class S3IndexerStack(cdk.Stack):
             code=lmda.Code.asset('s3_indexer/lambda'),
             handler='indexer.handler',
             dead_letter_queue_enabled=True,
+            reserved_concurrent_executions=lambda_concurrency,
             environment = {
                 'DDB_TABLE_NAME': self._ddb_table.table_name,
                 'S3_BUCKET_NAME': self._s3_bucket.bucket_name
