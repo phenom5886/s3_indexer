@@ -14,24 +14,25 @@ Infrastructure deployed:
 - Event integrations 
 
 ## DynamoDB Table Structure
-The DynamoDB table is simple in the initial state. 
-
-Sort Key: s3_key (S)
+Partition Key: s3_key (String)
 
 Additional fields stored:
 
-- content_type: Object MIME type
-- e_tag: Object MD5 hash
-- size: Object size (Bytes)
+- content_type: Object MIME type (String)
+- e_tag: Object MD5 hash (String)
+- size: Object size in Bytes (Number)
+- creation_date: Object creation date/time stamp (String)
 
-Additional secondary indexes can be created to allow better searching on additional fields.
+A Global Secondary Index is created with the Hash Key of content_type. This is to facilitate 
+easy querying of files based on object type via selects rather than scans. 
 
 ## Configuration
 You can set the following input parameters in the config.yml file:
 
 - S3 bucket name
 - DynamoDB table name
-- DynamoDB read/write capacity
+- DynamoDB billing mode (PROVISIONED or PAY_PER_REQUEST)
+- DynamoDB read/write capacity (only required if you configure PROVISIONED billing mode)
 - Reserved concurrency for Lambda function
 
 ## Setup & Deployment
