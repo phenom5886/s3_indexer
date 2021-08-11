@@ -57,7 +57,8 @@ setuptools.setup(
         'aws-cdk.cloud-assembly-schema==1.116.0',
         'aws-cdk.custom-resources==1.116.0',
         'aws-cdk.cx-api==1.116.0',
-        'aws-cdk.region-info==1.116.0'
+        'aws-cdk.region-info==1.116.0',
+        'PyYAML==5.4.1'
     ],
 
     python_requires=">=3.6",
